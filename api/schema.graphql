@@ -1,31 +1,32 @@
 enum categoryEnum {
-  Shirts
-  Jeans
-  Jackets
-  Sweaters
-  Accessories
+    Shirts
+    Jeans
+    Jackets
+    Sweaters
+    Accessories
 }
 
 type Product {
-  _id: ID!
-  id: Int!
-  category: categoryEnum!
-  productName: String!
-  price: String
-  image: String
+    _id: ID!
+    id: Int!
+    category: categoryEnum!
+    productName: String!
+    pricePerUnit: Float
+    imageUrl: String
 }
 
 input ProductInputs {
-  category: categoryEnum = Shirts
-  productName: String
-  price: String
-  image: String
-}
-
-type Query {
-  productList: [Product!]!
+    category: categoryEnum!
+    productName: String!
+    "Optional, if not supplied, will be set to 'New'"
+    pricePerUnit: Float
+    imageUrl: String
 }
 
 type Mutation {
-  productAdd(product: ProductInputs!): Product!
+    addProduct(product: ProductInputs!): Product!
+}
+
+type Query {
+    productList: [Product!]!
 }

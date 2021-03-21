@@ -1,10 +1,13 @@
+/* eslint-disable no-unused-vars */
+/* eslint no-restricted-globals: "off" */
+
 const fs = require('fs');
 require('dotenv').config();
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const { MongoClient } = require('mongodb');
 
-const url = process.env.DB_URL || 'mongodb+srv://chris:user@cluster0.ytgef.mongodb.net/CS648?retryWrites=true&w=majority';
+const url = process.env.DB_URL || 'mongodb+srv://chris:user@cluster0.ytgef.mongodb.net/productsDB?retryWrites=true&w=majority';
 
 let db;
 
@@ -22,7 +25,7 @@ async function getNextSequence(name) {
   return result.value.current;
 }
 
-async function productAdd(_, { product }) {
+async function addProduct(_, { product }) {
   const errors = [];
   const newProduct = Object.assign({}, product);
   newProduct.id = await getNextSequence('products');
@@ -36,7 +39,7 @@ const resolvers = {
     productList,
   },
   Mutation: {
-    productAdd,
+    addProduct,
   },
 };
 
@@ -58,6 +61,7 @@ server.applyMiddleware({ app, path: '/graphql' });
 
 const port = process.env.API_SERVER_PORT || 3000;
 
+// eslint-disable-next-line func-names
 (async function () {
   try {
     await connectToDb();
@@ -68,3 +72,4 @@ const port = process.env.API_SERVER_PORT || 3000;
     console.log('ERROR:', err);
   }
 }());
+

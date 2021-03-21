@@ -8,23 +8,23 @@
        {
          id: 1,
          productName: 'All Saints Jacket',
-         price: 299,
+         pricePerUnit: 299,
          category: 'Jacket',
-         image: 'https://images.app.goo.gl/7RfsZTYvou19dH9h8',
+         imageUrl: 'https://images.app.goo.gl/7RfsZTYvou19dH9h8',
        },
        {
          id: 2,
          productName: "Levi's Jeans",
-         price: 80,
+         pricePerUnit: 80,
          category: 'Jeans',
-         image: 'https://images.app.goo.gl/4ttGud2gy4v7NVzh9',
+         imageUrl: 'https://images.app.goo.gl/4ttGud2gy4v7NVzh9',
        },
        {
          id: 3,
          productName: "Cotton Sweater",
-         price: 30,
+         pricePerUnit: 30,
          category: 'Sweaters',
-         image: 'https://images.app.goo.gl/Gbd4JdrnGrNDkzrU8',
+         imageUrl: 'https://images.app.goo.gl/Gbd4JdrnGrNDkzrU8',
        },
      ];
      

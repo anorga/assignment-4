@@ -5,29 +5,24 @@
 /* eslint "react/jsx-no-undef": "off" */
 
 /* eslint-disable react/prefer-stateless-function */
-class ProductTable extends React.Component {
-  render() {
-    const productRows = this.props.products.map(product => /*#__PURE__*/React.createElement(ProductRow, {
-      key: product.id,
-      product: product
-    }));
-    return /*#__PURE__*/React.createElement("table", {
-      className: "bordered"
-    }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("td", null, "ID"), /*#__PURE__*/React.createElement("td", null, "Product Name"), /*#__PURE__*/React.createElement("td", null, "Price"), /*#__PURE__*/React.createElement("td", null, "Category"), /*#__PURE__*/React.createElement("td", null, "Image"))), /*#__PURE__*/React.createElement("tbody", null, productRows));
-  }
+function ProductTable(props) {
+  const productRows = props.products.map(product => /*#__PURE__*/React.createElement(ProductRow, {
+    key: product.id,
+    product: product
+  }));
+  return /*#__PURE__*/React.createElement("table", {
+    className: "bordered"
+  }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("td", null, "ID"), /*#__PURE__*/React.createElement("td", null, "Product Name"), /*#__PURE__*/React.createElement("td", null, "Price"), /*#__PURE__*/React.createElement("td", null, "Category"), /*#__PURE__*/React.createElement("td", null, "Image"))), /*#__PURE__*/React.createElement("tbody", null, productRows));
+}
 
-} // function ProductRow(props) {
-
-
-class ProductRow extends React.Component {
-  render() {
-    const products = this.props.product;
-    return /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("td", null, products.id), /*#__PURE__*/React.createElement("td", null, products.productName), /*#__PURE__*/React.createElement("td", null, "$", products.price), /*#__PURE__*/React.createElement("td", null, products.category), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("a", {
-      href: products.image,
-      target: "_blank"
-    }, "View")));
-  }
-
+function ProductRow(props) {
+  const {
+    product
+  } = props;
+  return /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("td", null, product.id), /*#__PURE__*/React.createElement("td", null, product.productName), /*#__PURE__*/React.createElement("td", null, "$", product.pricePerUnit), /*#__PURE__*/React.createElement("td", null, product.category), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("a", {
+    href: product.imageUrl,
+    target: "_blank"
+  }, "View")));
 }
 
 class ProductAdd extends React.Component {
@@ -39,16 +34,16 @@ class ProductAdd extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     const product = {
-      price: document.querySelector('#price').value,
+      pricePerUnit: document.querySelector('#price').value.substr(1),
       productName: document.querySelector('#productName').value,
-      image: document.querySelector('#image').value,
+      imageUrl: document.querySelector('#image').value,
       category: document.querySelector('#category').value
     };
     this.props.createProduct(product);
-    document.querySelector('#price').value = "";
+    document.querySelector('#price').value = "$";
     document.querySelector('#productName').value = "";
     document.querySelector('#image').value = "";
-    document.querySelector('#category').value = "";
+    document.querySelector('#category').value = "Shirts";
   }
 
   render() {
@@ -60,7 +55,17 @@ class ProductAdd extends React.Component {
     }, "Category"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("select", {
       name: "category",
       id: "category"
-    }, /*#__PURE__*/React.createElement("option", null, "Shirts"), /*#__PURE__*/React.createElement("option", null, "Jeans"), /*#__PURE__*/React.createElement("option", null, "Jackets"), /*#__PURE__*/React.createElement("option", null, "Sweaters"), /*#__PURE__*/React.createElement("option", null, "Accessories")), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("label", {
+    }, /*#__PURE__*/React.createElement("option", {
+      value: "shirts"
+    }, "Shirts"), /*#__PURE__*/React.createElement("option", {
+      value: "Jeans"
+    }, "Jeans"), /*#__PURE__*/React.createElement("option", {
+      value: "Jackers"
+    }, "Jackets"), /*#__PURE__*/React.createElement("option", {
+      value: "Sweaters"
+    }, "Sweaters"), /*#__PURE__*/React.createElement("option", {
+      value: "Accesories"
+    }, "Accessories")), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("label", {
       htmlFor: "productName"
     }, "Product Name"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("input", {
       type: "text",
@@ -72,7 +77,7 @@ class ProductAdd extends React.Component {
       type: "text",
       name: "price",
       id: "price",
-      placeholder: "$"
+      defaultValue: "$"
     }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("label", {
       htmlFor: "image"
     }, "Image URL"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("input", {
@@ -99,14 +104,14 @@ class ProductList extends React.Component {
 
   async loadData() {
     const query = `query {
-          productList {
-            id
-            category
-            productName
-            price
-            image
-          }
-        }`;
+                productList {
+                  id
+                  productName
+                  pricePerUnit
+                  category
+                  imageUrl
+                }
+              }`;
     const response = await fetch(window.ENV.UI_API_ENDPOINT, {
       method: 'POST',
       headers: {
@@ -124,11 +129,11 @@ class ProductList extends React.Component {
   }
 
   async createProduct(product) {
-    const query = `mutation productAdd($product: ProductInputs!) {
-              productAdd(product: $product) {
-                id
-              }
-            }`;
+    const query = `mutation addProduct($product: ProductInputs!) {
+                addProduct(product: $product) {
+                    id
+                }
+              }`;
     const response = await fetch(window.ENV.UI_API_ENDPOINT, {
       method: 'POST',
       headers: {
